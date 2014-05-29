@@ -4,7 +4,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Microsoft.Framework.PackageManager.CommandLine
+namespace Microsoft.Framework.Runtime.Common.CommandLine
 {
     public class CommandInfo
     {
@@ -13,6 +13,7 @@ namespace Microsoft.Framework.PackageManager.CommandLine
             Options = new List<CommandOption>();
             Arguments = new List<CommandArgument>();
             Commands = new List<CommandInfo>();
+            RemainingArguments = new List<string>();
         }
 
         public CommandInfo Parent { get; set; }
@@ -21,6 +22,7 @@ namespace Microsoft.Framework.PackageManager.CommandLine
         public string Description { get; set; }
         public List<CommandOption> Options { get; private set; }
         public List<CommandArgument> Arguments { get; private set; }
+        public List<string> RemainingArguments { get; private set; }
         public Func<int> Invoke { get; set; }
 
         public List<CommandInfo> Commands { get; private set; }
@@ -33,14 +35,14 @@ namespace Microsoft.Framework.PackageManager.CommandLine
             return this;
         }
 
-        public CommandOption Option(string template, string description)
+        public CommandOption Option(string template, string description, CommandOptionType optionType)
         {
-            return Option(template, description, _ => { });
+            return Option(template, description, optionType, _ => { });
         }
 
-        public CommandOption Option(string template, string description, Action<CommandOption> configuration)
+        public CommandOption Option(string template, string description, CommandOptionType optionType, Action<CommandOption> configuration)
         {
-            var option = new CommandOption(template) { Description = description };
+            var option = new CommandOption(template, optionType) { Description = description };
             Options.Add(option);
             configuration(option);
             return option;

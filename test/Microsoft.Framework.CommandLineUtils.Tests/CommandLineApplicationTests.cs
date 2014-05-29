@@ -2,10 +2,9 @@
 // Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
 
 using System;
-using Microsoft.Framework.PackageManager.CommandLine;
 using Xunit;
 
-namespace Microsoft.Framework.PackageManager.Tests
+namespace Microsoft.Framework.Runtime.Common.CommandLine
 {
     public class CommandLineApplicationTests
     {
@@ -14,7 +13,7 @@ namespace Microsoft.Framework.PackageManager.Tests
         {
             var called = false;
 
-            var app = new CommandLineApplication();
+            var app = new CommandLineApplication("AppName");
             app.Command("test", c =>
             {
                 c.OnExecute(() =>
@@ -35,7 +34,7 @@ namespace Microsoft.Framework.PackageManager.Tests
             CommandArgument first = null;
             CommandArgument second = null;
 
-            var app = new CommandLineApplication();
+            var app = new CommandLineApplication("AppName");
 
             app.Command("test", c =>
             {
@@ -56,7 +55,7 @@ namespace Microsoft.Framework.PackageManager.Tests
             CommandArgument first = null;
             CommandArgument second = null;
 
-            var app = new CommandLineApplication();
+            var app = new CommandLineApplication("AppName");
 
             app.Command("test", c =>
             {
@@ -73,7 +72,7 @@ namespace Microsoft.Framework.PackageManager.Tests
         [Fact]
         public void UnknownCommandCausesException()
         {
-            var app = new CommandLineApplication();
+            var app = new CommandLineApplication("AppName");
 
             app.Command("test", c =>
             {
@@ -93,19 +92,19 @@ namespace Microsoft.Framework.PackageManager.Tests
             CommandOption first = null;
             CommandOption second = null;
 
-            var app = new CommandLineApplication();
+            var app = new CommandLineApplication("AppName");
 
             app.Command("test", c =>
             {
-                first = c.Option("--first <NAME>", "First argument");
-                second = c.Option("--second <NAME>", "Second argument");
+                first = c.Option("--first <NAME>", "First argument", CommandOptionType.SingleValue);
+                second = c.Option("--second <NAME>", "Second argument", CommandOptionType.SingleValue);
                 c.OnExecute(() => 0);
             });
 
             app.Execute("test", "--first", "one", "--second", "two");
 
-            Assert.Equal("one", first.Value);
-            Assert.Equal("two", second.Value);
+            Assert.Equal("one", first.Values[0]);
+            Assert.Equal("two", second.Values[0]);
         }
 
         [Fact]
@@ -113,11 +112,11 @@ namespace Microsoft.Framework.PackageManager.Tests
         {
             CommandOption first = null;
 
-            var app = new CommandLineApplication();
+            var app = new CommandLineApplication("AppName");
 
             app.Command("test", c =>
             {
-                first = c.Option("--first <NAME>", "First argument");
+                first = c.Option("--first <NAME>", "First argument", CommandOptionType.SingleValue);
                 c.OnExecute(() => 0);
             });
 
@@ -132,19 +131,19 @@ namespace Microsoft.Framework.PackageManager.Tests
             CommandOption first = null;
             CommandOption second = null;
 
-            var app = new CommandLineApplication();
+            var app = new CommandLineApplication("AppName");
 
             app.Command("test", c =>
             {
-                first = c.Option("--first <NAME>", "First argument");
-                second = c.Option("--second <NAME>", "Second argument");
+                first = c.Option("--first <NAME>", "First argument", CommandOptionType.SingleValue);
+                second = c.Option("--second <NAME>", "Second argument", CommandOptionType.SingleValue);
                 c.OnExecute(() => 0);
             });
 
             app.Execute("test", "--first=one", "--second:two");
 
-            Assert.Equal("one", first.Value);
-            Assert.Equal("two", second.Value);
+            Assert.Equal("one", first.Values[0]);
+            Assert.Equal("two", second.Values[0]);
         }
 
         [Fact]
@@ -153,19 +152,19 @@ namespace Microsoft.Framework.PackageManager.Tests
             CommandOption first = null;
             CommandOption second = null;
 
-            var app = new CommandLineApplication();
+            var app = new CommandLineApplication("AppName");
 
             app.Command("test", c =>
             {
-                first = c.Option("--first <NAME>", "First argument");
-                second = c.Option("--second <NAME>", "Second argument");
+                first = c.Option("--first <NAME>", "First argument", CommandOptionType.SingleValue);
+                second = c.Option("--second <NAME>", "Second argument", CommandOptionType.SingleValue);
                 c.OnExecute(() => 0);
             });
 
             app.Execute("test", "/first=one", "/second", "two");
 
-            Assert.Equal("one", first.Value);
-            Assert.Equal("two", second.Value);
+            Assert.Equal("one", first.Values[0]);
+            Assert.Equal("two", second.Values[0]);
         }
 
         [Fact]
@@ -174,19 +173,19 @@ namespace Microsoft.Framework.PackageManager.Tests
             CommandOption first = null;
             CommandOption second = null;
 
-            var app = new CommandLineApplication();
+            var app = new CommandLineApplication("AppName");
 
             app.Command("test", c =>
             {
-                first = c.Option("-1 --first <NAME>", "First argument");
-                second = c.Option("-2 --second <NAME>", "Second argument");
+                first = c.Option("-1 --first <NAME>", "First argument", CommandOptionType.SingleValue);
+                second = c.Option("-2 --second <NAME>", "Second argument", CommandOptionType.SingleValue);
                 c.OnExecute(() => 0);
             });
 
             app.Execute("test", "-1=one", "-2", "two");
 
-            Assert.Equal("one", first.Value);
-            Assert.Equal("two", second.Value);
+            Assert.Equal("one", first.Values[0]);
+            Assert.Equal("two", second.Values[0]);
         }
     }
 }

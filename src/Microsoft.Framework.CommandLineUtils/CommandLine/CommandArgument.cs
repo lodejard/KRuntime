@@ -3,7 +3,7 @@
 
 using System;
 
-namespace Microsoft.Framework.PackageManager
+namespace Microsoft.Framework.Runtime.Common.CommandLine
 {
     public class CommandArgument
     {
